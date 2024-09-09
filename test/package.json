@@ -1,0 +1,19 @@
+{
+	"workerful": {
+		"name": "workerful test",
+		"ip": "localhost",
+		"port": 0,
+		"centered": "always",
+		"kiosk": false,
+		"window": {
+			"size": [
+				400,
+				220
+			],
+			"position": [
+				520,
+				340
+			]
+		}
+	}
+}

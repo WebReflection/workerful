@@ -1,0 +1,7 @@
+.DS_Store
+.nyc_output
+package-lock.json
+v8.log
+coverage/
+node_modules/
+src/*.mjs
