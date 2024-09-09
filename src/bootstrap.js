@@ -4,7 +4,7 @@ import { homedir } from 'node:os';
 export default ({ name: projectName, workerful: { name, browser, window } }, app, kiosk) => {
   const browserName = browser?.name || 'chrome';
   const flags = (browser?.flags || []).slice(0);
-  const appName = name || projectName;
+  const appName = name || projectName || 'unknown';
   // ⚠️ TODO: only chrome is supported at this point
   switch (browserName) {
     case 'chrome': {
@@ -35,7 +35,7 @@ export default ({ name: projectName, workerful: { name, browser, window } }, app
         '--no-default-browser-check',
         '--disable-popup-blocking',
         // not sure this does anything
-        '--disable-system-font-check',
+        // '--disable-system-font-check',
       );
       if (kiosk) flags.push('--kiosk', app);
       else flags.push(`--app=${app}`);

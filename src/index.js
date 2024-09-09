@@ -10,6 +10,7 @@ import { parse, stringify, truthy } from './utils.js';
 import { pkg, json, create } from './server.js';
 import bootstrap from './bootstrap.js';
 
+import serializer from './serializer.js';
 import client from './window.mjs';
 import worker from './worker.mjs';
 
@@ -26,27 +27,35 @@ const {
   WORKERFUL_IP = workerful.ip || 'localhost',
   WORKERFUL_PORT = workerful.port || 0,
   WORKERFUL_KIOSK = workerful.kiosk || false,
+  WORKERFUL_SERIALIZER = workerful.serializer || "json",
 } = process.env;
 
 const WORKERFUL_SECRET = crypto.randomUUID();
 
+const workerful_serializer = WORKERFUL_SERIALIZER.toLowerCase();
+
+if (!(workerful_serializer in serializer))
+  throw new Error(`Serializer ${WORKERFUL_SERIALIZER} is not json, circular or structured`);
+
 let ws, summary = Promise.resolve();
 
-const server = await create((req, res) => {
+const server = await create(serializer[workerful_serializer], (req, res) => {
   const { url, method, headers } = req;
   if (method === 'GET') {
     if (url === '/workerful') {
-      let content;
+      let content, options = {
+        serializer: workerful_serializer,
+      };
       if (headers.referer.endsWith('/workerful.js'))
-        content = worker;
+        content = `globalThis.workerful=${stringify(options)};${worker}`;
       else {
         content = `globalThis.workerful=${stringify({
-          ws,
+          ...options, ws,
           secret: WORKERFUL_SECRET,
           centered: (
             WORKERFUL_CENTERED === 'always' ||
             truthy(WORKERFUL_CENTERED)
-          )
+          ),
         })};${client}`;
       }
       res.writeHead(200, { 'Content-Type': 'text/javascript;charset=utf-8' });
@@ -57,6 +66,7 @@ const server = await create((req, res) => {
   else if (method === 'POST') {
     const secret = `/${WORKERFUL_SECRET}?`;
     if (url.startsWith(secret)) {
+      if (WORKERFUL_KIOSK) return;
       const { promise, resolve } = Promise.withResolvers();
       summary = promise;
       try {
@@ -107,8 +117,11 @@ server.listen(+WORKERFUL_PORT, WORKERFUL_IP, async function () {
   });
 
   if (process.env.DEBUG) {
+    console.debug(`\x1b[1mworkerful app launcher\x1b[0m`);
     console.debug(`chromium ${flags.join(' ')}`);
-    console.debug(`\x1b[1mhttp://${APP}\x1b[0m`);
+    console.debug(`\x1b[1mworkerful serializer\x1b[0m`);
+    console.debug(WORKERFUL_SERIALIZER);
+    console.debug(`\x1b[1mworkerful server\x1b[0m`);
+    console.debug(`http://${APP}`);
   }
-
 });

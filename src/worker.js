@@ -1,4 +1,11 @@
 import coincident from 'coincident/server/worker';
-const { server, window } = await coincident();
+import serializer from './serializer.js';
+
+const { workerful } = globalThis;
+delete globalThis.workerful;
+
+const { server, window } = await coincident(
+  serializer[workerful.serializer]
+);
 
 export { server, window };

@@ -34,20 +34,28 @@ package.json  # the package.json file at the root
 
 export const json = parse(readFileSync(pkg).toString('utf-8'));
 
-export const create = async workerful => {
+export const create = async (serializer, workerful) => {
   const listener = json.workerful?.server;
-  const fallback = !!listener;
   const handler = listener ?
     (await import(resolve(cwd.$, listener))).default :
     staticHandler(join(dirname(pkg), 'public'))
   ;
-  const server = createServer((req, res) => {
-    if (workerful(req, res)) return;
-    if (!handler(req, res) && fallback) {
-      req.writeHead(404);
+  const server = createServer(async (req, res) => {
+    try {
+      if (workerful(req, res)) return;
+      if (await handler(req, res)) return;
+      res.writeHead(404);
+      res.end();
+    }
+    catch (error) {
+      console.error(error);
+      res.writeHead(500);
       res.end();
     }
   });
-  coincident({ wss: new WebSocketServer({ server }) });
+  coincident({
+    wss: new WebSocketServer({ server }),
+    ...serializer
+  });
   return server;
 };

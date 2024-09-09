@@ -1,18 +1,24 @@
 {
 	"workerful": {
-		"name": "workerful test",
+		"name": "your project name",
 		"ip": "localhost",
 		"port": 0,
 		"centered": "always",
 		"kiosk": false,
+		"server": "",
+		"serializer": "json",
+		"browser": {
+			"name": "chrome",
+			"flags": []
+		},
 		"window": {
 			"size": [
-				400,
-				220
+				286,
+				214
 			],
 			"position": [
-				520,
-				340
+				577,
+				343
 			]
 		}
 	}
