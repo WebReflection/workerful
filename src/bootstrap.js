@@ -32,7 +32,6 @@ export default ({ name: projectName, workerful: { name, browser, window } }, app
         '--no-default-browser-check',
         '--disable-default-apps',
         '--disable-cache',
-        '--no-default-browser-check',
         '--disable-popup-blocking',
         // not sure this does anything
         // '--disable-system-font-check',
