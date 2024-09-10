@@ -92,7 +92,7 @@ This is the expected folder the server will automatically handle per each reques
 The `workerful.js` file is automated after [coincident/server](https://github.com/WebReflection/coincident?tab=readme-ov-file#server) and its minimal content would look like this:
 
 ```js
-import { server, window } from '/workerful'; // 🤖
+import { server, window } from '/workerful'; // 🦄
 
 const message = 'This is Workerful 🌈';
 

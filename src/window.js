@@ -10,6 +10,7 @@ catch ({ message }) {
   close();
 }
 
+// 😉 globalThis.workerful is provided server side
 const { workerful } = globalThis;
 delete globalThis.workerful;
 
