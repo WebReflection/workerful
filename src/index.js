@@ -28,6 +28,8 @@ const {
   WORKERFUL_PORT = workerful.port || 0,
   WORKERFUL_KIOSK = workerful.kiosk || false,
   WORKERFUL_SERIALIZER = workerful.serializer || "json",
+  WORKERFUL_HEADLESS = false,
+  DEBUG = false,
 } = process.env;
 
 const WORKERFUL_SECRET = crypto.randomUUID();
@@ -47,7 +49,7 @@ const server = await create(serializer[workerful_serializer], (req, res) => {
         serializer: workerful_serializer,
       };
       if (headers.referer.endsWith('/workerful.js'))
-        content = `globalThis.workerful=${stringify(options)};${worker}`;
+        content = `globalThis.workerful=${stringify(options)};\n${worker}`;
       else {
         content = `globalThis.workerful=${stringify({
           ...options, ws,
@@ -56,7 +58,7 @@ const server = await create(serializer[workerful_serializer], (req, res) => {
             WORKERFUL_CENTERED === 'always' ||
             truthy(WORKERFUL_CENTERED)
           ),
-        })};${client}`;
+        })};\n${client}`;
       }
       res.writeHead(200, { 'Content-Type': 'text/javascript;charset=utf-8' });
       res.end(content);
@@ -99,29 +101,29 @@ server.listen(+WORKERFUL_PORT, WORKERFUL_IP, async function () {
 
   ws = `ws:${APP}`;
 
-  const app = await openApp(apps[name], {
-    arguments: flags
-  });
+  if (!truthy(WORKERFUL_HEADLESS)) {
+    const app = await openApp(apps[name], {
+      arguments: flags
+    });
 
-  const { pid } = app;
-  process.on('SIGINT', () => {
-    setTimeout(() => process.exit(0));
-    process.kill(pid);
-  });
+    const { pid } = app;
+    process.on('SIGINT', () => {
+      setTimeout(() => process.exit(0));
+      process.kill(pid);
+    });
 
-  app.on('close', () => {
-    setTimeout(async () => {
-      await summary;
-      process.exit(0);
-    }, 250);
-  });
+    app.on('close', () => {
+      setTimeout(async () => {
+        await summary;
+        process.exit(0);
+      }, 250);
+    });
+  }
 
-  if (process.env.DEBUG) {
+  if (truthy(DEBUG)) {
     console.debug(`\x1b[1mworkerful app launcher\x1b[0m`);
     console.debug(`chromium ${flags.join(' ')}`);
-    console.debug(`\x1b[1mworkerful serializer\x1b[0m`);
-    console.debug(WORKERFUL_SERIALIZER);
-    console.debug(`\x1b[1mworkerful server\x1b[0m`);
-    console.debug(`http://${APP}`);
+    console.debug(`\x1b[1mworkerful serializer\x1b[0m `, WORKERFUL_SERIALIZER);
+    console.debug(`\x1b[1mworkerful server\x1b[0m     `, `http://${APP}`);
   }
 });
