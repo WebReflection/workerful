@@ -18,7 +18,7 @@ const [
 ];
 
 render(window.document.body, html`
-  <h1>workerful</h1>
+  <h1>👷 workerful</h1>
   <ul>
     <li>Platform: ${platform}</li>
     <li>Arch: ${arch}</li>

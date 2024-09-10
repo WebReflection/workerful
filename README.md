@@ -1,4 +1,4 @@
-# workerful
+# 👷 workerful
 
 A *wonderful* [Electron](https://www.electronjs.org/) standalone alternative 🌈, based on both system (*Chrome/ium based*) browser and node presence, hence weighting **only <span>96.4KB</span> to bootstrap**.
 
@@ -7,11 +7,16 @@ A *wonderful* [Electron](https://www.electronjs.org/) standalone alternative �
 npx workerful ~/project/folder/package.json
 ```
 
-### Introduction
+<details>
+<summary><strong>Background / Project goal</strong></summary>
 
 This project goal is to provide a minimalistic *App Container* fully based on system software and it uses by default *ESM* and all the modern *Web Standards* features through the (currently) most capable browser: *Chrome/ium*.
 
 As the majority of Web developers and users most likely have *NodeJS* installed, and as pretty much everyone also has *Chrome* or *Chromium* installed on their machines, I've decided to give this approach a spin to hopefully see how much the community can create around its simple, yet extremely powerful, primitives that this tiny tool enables.
+
+</details>
+
+- - -
 
 ## Quick Start
 
@@ -54,7 +59,8 @@ The `package.json` file is used to describe all desired *app* bootstrap features
 }
 ```
 
-#### Fields description
+<details>
+<summary><strong>Fields description</strong></summary>
 
   * **name** is your app name. This will be used as top bar name in your OS and recognized with such name among your running processes
   * **ip** is your app IP v4 address. By default it's `localhost` but it can be any other *IP* address. This field can be overridden via environment `WORKERFUL_IP` variable.
@@ -72,6 +78,10 @@ The `package.json` file is used to describe all desired *app* bootstrap features
   * **window** is your *app* UI size and position, reflected in the app via `window.screenX` and `window.screenY` for the position and `window.screen.width` plus `window.screen.height` for the size. This field has two optional nested fields, ignored when the *app* starts in *kiosk* mode:
     * **size** which is an array of `[width, height]` numbers
     * **position** which is an array of `[x, y]` numbers
+
+</details>
+
+- - -
 
 ### public folder
 
@@ -106,9 +116,16 @@ const { default: os } = await server.import('os');
 const { process } = server;
 ```
 
-> ℹ️ **Note**
-> Due inevitable roundtrip delay between the worker and the main thread or the server one, it's important to keep in mind that highly / real-time reactive changes on the main UI are better passed along via listeners or exposed functionalities within the main thread, where it would receive, as example, only data to update or take care about, and so it goes for the server.
-> The rule of thumb here: delegate to respective domains heavy operations and expose utilities through dedicated modules which goal is to help the worker receive, or send, just data. This would be the *TL;DR* "*best practice* of this *worker driven* pattern.
+<details>
+<summary><strong>Best practices</strong></summary>
+
+Due inevitable roundtrip delay between the worker and the main thread or the server one, it's important to keep in mind that highly / real-time reactive changes on the main UI are better passed along via listeners or exposed functionalities within the main thread, where it would receive, as example, only data to update or take care about, and so it goes for the server.
+
+The rule of thumb here: delegate to respective domains heavy operations and expose utilities through dedicated modules which goal is to help the worker receive, or send, just data. This would be the *TL;DR* "*best practice*" of this *worker driven* pattern.
+
+</details>
+
+- - -
 
 #### index.html
 
@@ -129,7 +146,11 @@ The `/workerful` import on both main *window* thread and the *worker* is automat
 
 On the **main** thread, it provides a minimal bootstrap logic that automatically bootstrap a *Worker* to drive the application but after that module, everything else is allowed just like any regular *Web Application*.
 
-> ℹ️ **Note**
-> Both *main* `/workerful` and *worker* `/workeful` imports are handled on the *NodeJS* side and these two requests will never leak through the provided handler.
-> It is hence useless, or meaningless, to check for `req.url` and match against `/workerful` as that won't ever happen.
+<details>
+<summary><strong>Good to know</strong></summary>
 
+Both *main* `/workerful` and *worker* `/workeful` imports are handled on the *NodeJS* side and these two requests will never leak through the provided handler.
+
+It is hence useless, or meaningless, to check for `req.url` and match against `/workerful` as that won't ever happen.
+
+</details>
