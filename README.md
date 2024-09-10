@@ -40,7 +40,7 @@ The `package.json` file is used to describe all desired *app* bootstrap features
 		"port": 0,
 		"centered": true,
 		"kiosk": false,
-    "serializer": "json",
+		"serializer": "json",
 		"server": "",
 		"browser": {
 			"name": "chrome",
@@ -61,8 +61,11 @@ The `package.json` file is used to describe all desired *app* bootstrap features
   * **port** is your app *port*. By default the project runs on any available port and it's completely transparent for your app. This field can be overridden via environment `WORKERFUL_PORT` variable.
   * **centered** which can be `true`, to center the *app* on its first bootstrap, `false` to run the *app* on top-left corner and then run where it was left last time, or `"always"` to always start the *app* centered, even if the user moved the window elsewhere. This field can be overridden via environment `WORKERFUL_CENTERED` variable, where `1`, `y`, `yes`, `ok` or `always` are valid values
   * **kiosk** to launch the *app* in *kiosk* mode (fullscreen). This field can be overridden via environment `WORKERFUL_KIOSK` variable, where `1`, `y`, `yes` or `ok` are valid values
-  * **serializer** is the *stringify* / *parse* used to post messages between the *worker* and either the main *window* thread or the *server*. By default it's `"json"` but it can be also `"circular"`, based on [flatted](https://github.com/WebReflection/flatted?tab=readme-ov-file#flatted), or `"structured"`, based on [@ungap/structured-clone/json](https://github.com/ungap/structured-clone?tab=readme-ov-file#tojson).
-  * **server** to optionally specify a *request handler/listener* for the *app*" where `export default (req, res) => { res.writeHead(200); res.end() }` would be a valid, bare-minimal, implementation. The file default export would be awaited and invoked with default *NodeJS* server references and if it does not return `true` on success, the server will respond with a `404`. You can implement or orchestrate any logic you like through this handler but, if not specified, a default [static file handler](https://github.com/WebReflection/static-handler) is used instead.
+  * **serializer** is the *stringify* / *parse* used to post messages between the *worker* and either the main *window* thread or the *server*. By default it's `"json"` but it can be also `"circular"`, based on [flatted](https://github.com/WebReflection/flatted?tab=readme-ov-file#flatted), or `"structured"`, based on [@ungap/structured-clone/json](https://github.com/ungap/structured-clone?tab=readme-ov-file#tojson). As quick summary:
+    * **json** is the default serializer. It's the preferred method for DB related data exchanges or simple payloads (and it's also slightly faster than others)
+    * **circular** is like *json* but it allows circular references within passed *data* among "*worlds*"
+    * **structured** allows both circular references and extra types such as *Date*, *U/Int8Array*, *U/Int16Array*,  *U/Int32Array* or *Float32Array*, *Error* and more
+  * **server** to optionally specify a *request handler/listener* for the *app*" where `export default (req, res) => { res.writeHead(200); res.end() }` would be a valid, bare-minimal, implementation. The file default export would be awaited and invoked with default *NodeJS* server references and if it does not return `true` on success, the server will respond with a `404`. You can implement or orchestrate any logic you like through this handler but, if not specified, a default [static file handler](https://github.com/WebReflection/static-handler) is used instead
   * **browser** is your *app* browser name based on [open API](https://github.com/sindresorhus/open?tab=readme-ov-file#api). Currently only *chrome* is supported but in the future *firefox* and *edge* might be supported too. This field has two optional nested fields:
     * **name** which is currently only *chrome*
     * **flags** which allows extra flags to be passed on *app* bootstrap. See this curated [list of Chrome/ium flags](https://peter.sh/experiments/chromium-command-line-switches/) to know more and consider many flags are already in place.
