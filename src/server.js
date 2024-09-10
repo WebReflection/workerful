@@ -10,14 +10,7 @@ import { parse } from './utils.js';
 
 const [...rest] = process.argv.slice(2);
 
-const cwd = {
-  _: '',
-  get $() {
-    return this._ || (this._ = process.cwd());
-  }
-};
-
-export const pkg = rest.at(0) || join(cwd.$, 'package.json');
+export const pkg = rest.at(0) || join(process.cwd(), 'package.json');
 if (pkg === '--help' || !existsSync(pkg)) {
   const code = +(pkg !== '--help');
   if (code) console.error(`\x1b[1mUnable to parse package.json\x1b[0m\n`);
@@ -37,25 +30,24 @@ export const json = parse(readFileSync(pkg).toString('utf-8'));
 export const create = async (serializer, workerful) => {
   const listener = json.workerful?.server;
   const handler = listener ?
-    (await import(resolve(cwd.$, listener))).default :
+    (await import(resolve(dirname(pkg), listener))).default :
     staticHandler(join(dirname(pkg), 'public'))
   ;
   const server = createServer(async (req, res) => {
+    let status = 0;
     try {
       if (workerful(req, res)) return;
       if (await handler(req, res)) return;
-      res.writeHead(404);
-      res.end();
+      status = 404;
     }
     catch (error) {
       console.error(error);
-      res.writeHead(500);
-      res.end();
+      status = 500;
     }
+    res.writeHead(status);
+    res.end();
   });
-  coincident({
-    wss: new WebSocketServer({ server }),
-    ...serializer
-  });
+  const wss = new WebSocketServer({ server });
+  coincident({ wss, ...serializer });
   return server;
 };

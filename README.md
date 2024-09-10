@@ -39,6 +39,7 @@ The `package.json` file is used to describe all desired *app* bootstrap features
 
 ```json
 {
+	"type": "module",
 	"workerful": {
 		"name": "your project name",
 		"ip": "localhost",

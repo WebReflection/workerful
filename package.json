@@ -11,7 +11,8 @@
     "rollup:client": "rollup --config rollup/client.config.js",
     "bin:patch": "node rollup/bin.patch.cjs",
     "client:patch": "node rollup/client.patch.cjs",
-    "size": "echo \"size: $(node rollup/bin.size.cjs)\" && node rollup/readme.size.cjs"
+    "size": "echo \"size: $(node rollup/bin.size.cjs)\" && node rollup/readme.size.cjs",
+    "test": "./workerful.mjs test/package.json"
   },
   "keywords": [
     "electron",

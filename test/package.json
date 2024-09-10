@@ -1,11 +1,12 @@
 {
+	"type": "module",
 	"workerful": {
 		"name": "your project name",
 		"ip": "localhost",
 		"port": 0,
 		"centered": "always",
 		"kiosk": false,
-		"server": "",
+		"server": "./handler.js",
 		"serializer": "json",
 		"browser": {
 			"name": "chrome",
