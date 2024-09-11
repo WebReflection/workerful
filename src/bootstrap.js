@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import { homedir } from 'node:os';
+import { tmpdir } from 'node:os';
 
 export default ({ name: projectName, workerful: { name, browser, window } }, app, kiosk) => {
   const browserName = browser?.name || 'chrome';
@@ -15,7 +15,7 @@ export default ({ name: projectName, workerful: { name, browser, window } }, app
         `--window-size=${(window?.size || [640, 400]).join(',')}`,
         `--window-name=${appName}`,
         // this is mandatory to avoid inheriting other chrome/ium instances/state
-        `--user-data-dir=${join(homedir(), '.workerful', appName.replace(/\s/g, '-'))}`,
+        `--user-data-dir=${join(tmpdir(), '.workerful', crypto.randomUUID())}`,
         '--ignore-profile-directory-if-not-exists',
         '--enable-webgpu-developer-features',
         '--ignore-gpu-blocklist',
