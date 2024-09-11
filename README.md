@@ -39,24 +39,24 @@ The `package.json` file is used to describe all desired *app* bootstrap features
 
 ```json
 {
-	"type": "module",
-	"workerful": {
-		"name": "your project name",
-		"ip": "localhost",
-		"port": 0,
-		"centered": true,
-		"kiosk": false,
-		"serializer": "json",
-		"server": "",
-		"browser": {
-			"name": "chrome",
-			"flags": []
-		},
-		"window": {
-			"size": [400, 220],
-			"position": [520, 340]
-		}
-	}
+  "type": "module",
+  "workerful": {
+    "name": "your project name",
+    "ip": "localhost",
+    "port": 0,
+    "centered": true,
+    "kiosk": false,
+    "serializer": "json",
+    "server": "",
+    "browser": {
+      "name": "chrome",
+      "flags": []
+    },
+    "window": {
+      "size": [400, 220],
+      "position": [520, 340]
+    }
+  }
 }
 ```
 

@@ -37,7 +37,7 @@
     "flatted": "^3.3.1",
     "open": "^10.1.0",
     "rollup": "^4.21.2",
-    "static-handler": "^0.5.1",
+    "static-handler": "^0.5.2",
     "ws": "^8.18.0"
   },
   "repository": {
