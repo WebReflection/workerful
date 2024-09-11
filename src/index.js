@@ -2,7 +2,7 @@
 
 import '@ungap/with-resolvers';
 
-import { writeFileSync } from 'node:fs';
+import { writeFileSync, rm } from 'node:fs';
 
 import { openApp, apps } from 'open';
 
@@ -97,7 +97,7 @@ server.listen(+WORKERFUL_PORT, WORKERFUL_IP, async function () {
 
   const APP = `//${family === 'IPv4' ? address : 'localhost'}:${port}/`;
 
-  const { name, flags } = bootstrap(json, `http:${APP}`, truthy(WORKERFUL_KIOSK));
+  const { name, dir, flags } = bootstrap(json, `http:${APP}`, truthy(WORKERFUL_KIOSK));
 
   ws = `ws:${APP}`;
 
@@ -106,16 +106,22 @@ server.listen(+WORKERFUL_PORT, WORKERFUL_IP, async function () {
       arguments: flags
     });
 
+    const drop = () => {
+      rm(dir, { recursive: true }, e => {
+        process.exit(+!!e);
+      });
+    };
+
     const { pid } = app;
     process.on('SIGINT', () => {
-      setTimeout(() => process.exit(0));
+      drop();
       process.kill(pid);
     });
 
     app.on('close', () => {
       setTimeout(async () => {
         await summary;
-        process.exit(0);
+        drop();
       }, 250);
     });
   }

@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 export default ({ name: projectName, workerful: { name, browser, window } }, app, kiosk) => {
   const browserName = browser?.name || 'chrome';
   const flags = (browser?.flags || []).slice(0);
-  const appName = name || projectName || 'unknown';
+  const userDataDir = join(tmpdir(), '.workerful', crypto.randomUUID());
   // ⚠️ TODO: only chrome is supported at this point
   switch (browserName) {
     case 'chrome': {
@@ -13,9 +13,9 @@ export default ({ name: projectName, workerful: { name, browser, window } }, app
         // '--disable-web-security', // this is trouble
         `--window-position=${(window?.position || [0, 0]).join(',')}`,
         `--window-size=${(window?.size || [640, 400]).join(',')}`,
-        `--window-name=${appName}`,
+        `--window-name=${name || projectName || 'unknown'}`,
         // this is mandatory to avoid inheriting other chrome/ium instances/state
-        `--user-data-dir=${join(tmpdir(), '.workerful', crypto.randomUUID())}`,
+        `--user-data-dir=${userDataDir}`,
         '--ignore-profile-directory-if-not-exists',
         '--enable-webgpu-developer-features',
         '--ignore-gpu-blocklist',
@@ -42,5 +42,5 @@ export default ({ name: projectName, workerful: { name, browser, window } }, app
     }
     default: throw new Error(`Unsupported browser ${browserName}`);
   }
-  return { name: browserName, flags };
+  return { name: browserName, dir: userDataDir, flags };
 };
