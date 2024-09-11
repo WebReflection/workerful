@@ -6,14 +6,19 @@
     "workerful": "workerful.mjs"
   },
   "scripts": {
-    "build": "npm run rollup:client && npm run client:patch && npm run rollup:bin && npm run bin:patch && npm run size",
+    "build": "npm run rollup:client && npm run client:patch && npm run rollup:bin && npm run bin:patch && chmod +x workerful.mjs; npm run size",
     "rollup:bin": "rollup --config rollup/bin.config.js",
     "rollup:client": "rollup --config rollup/client.config.js",
     "bin:patch": "node rollup/bin.patch.cjs",
     "client:patch": "node rollup/client.patch.cjs",
     "size": "echo \"size: $(node rollup/bin.size.cjs)\" && node rollup/readme.size.cjs",
-    "test": "./workerful.mjs test/package.json"
+    "test": "node ./workerful.mjs test/package.json"
   },
+  "files": [
+    "workerful.mjs",
+    "LICENSE",
+    "README.md"
+  ],
   "keywords": [
     "electron",
     "alternative",
@@ -42,6 +47,5 @@
   "bugs": {
     "url": "https://github.com/WebReflection/workerful/issues"
   },
-  "homepage": "https://github.com/WebReflection/workerful#readme",
-  "workerful": {}
+  "homepage": "https://github.com/WebReflection/workerful#readme"
 }
