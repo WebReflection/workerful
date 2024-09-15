@@ -22,5 +22,8 @@
 				300
 			]
 		}
+	},
+	"dependencies": {
+		"static-handler": "^0.5.3"
 	}
 }

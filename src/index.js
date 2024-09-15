@@ -3,6 +3,7 @@
 import '@ungap/with-resolvers';
 
 import { writeFileSync, rm } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 
 import { openApp, apps } from 'open';
 
@@ -101,8 +102,16 @@ server.listen(+WORKERFUL_PORT, WORKERFUL_IP, async function () {
 
   ws = `ws:${APP}`;
 
+  let bin = 'browser';
   if (!truthy(WORKERFUL_HEADLESS)) {
-    const app = await openApp(apps[name], {
+    for (bin of [].concat(apps[name])) {
+      if (!spawnSync(bin, ['--version']).error) break;
+      bin = '';
+    }
+
+    if (!bin) throw new Error(`Unable to start ${apps[name]}`);
+
+    const app = await openApp(bin, {
       arguments: flags
     });
 
@@ -128,7 +137,7 @@ server.listen(+WORKERFUL_PORT, WORKERFUL_IP, async function () {
 
   if (truthy(DEBUG)) {
     console.debug(`\x1b[1mworkerful app launcher\x1b[0m`);
-    console.debug(`chromium ${flags.join(' ')}`);
+    console.debug(`${bin} ${flags.join(' ')}`);
     console.debug(`\x1b[1mworkerful serializer\x1b[0m `, WORKERFUL_SERIALIZER);
     console.debug(`\x1b[1mworkerful server\x1b[0m     `, `http://${APP}`);
   }

@@ -1,6 +1,6 @@
 # 👷 workerful
 
-A *wonderful* [Electron](https://www.electronjs.org/) standalone alternative 🌈, based on both system (*Chrome/ium based*) browser and node presence, hence weighting **only <span>96.4KB</span> to bootstrap**.
+A *wonderful* [Electron](https://www.electronjs.org/) standalone alternative 🌈, based on both system (*Chrome/ium based*) browser and node presence, hence weighting **only <span>96.5KB</span> to bootstrap**.
 
 ```js
 // test it via NodeJS
