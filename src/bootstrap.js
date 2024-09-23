@@ -8,6 +8,8 @@ export default ({ name: projectName, workerful: { name, browser, window } }, app
   // ⚠️ TODO: only chrome is supported at this point
   switch (browserName) {
     case 'chrome': {
+      if (!/^http:\/\/localhost:\d+\//.test(app))
+        flags.push(`--unsafely-treat-insecure-origin-as-secure=${app}`);
       // https://peter.sh/experiments/chromium-command-line-switches/
       flags.push(
         // '--disable-web-security', // this is trouble

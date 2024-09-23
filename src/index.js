@@ -40,6 +40,12 @@ const workerful_serializer = WORKERFUL_SERIALIZER.toLowerCase();
 if (!(workerful_serializer in serializer))
   throw new Error(`Serializer ${WORKERFUL_SERIALIZER} is not json, circular or structured`);
 
+const ok = (res, content = '') => {
+  res.writeHead(200, { 'Content-Type': 'text/javascript;charset=utf-8' });
+  res.end(content);
+  return true;
+};
+
 let ws, summary = Promise.resolve();
 
 const server = await create(serializer[workerful_serializer], (req, res) => {
@@ -61,15 +67,13 @@ const server = await create(serializer[workerful_serializer], (req, res) => {
           ),
         })};\n${client}`;
       }
-      res.writeHead(200, { 'Content-Type': 'text/javascript;charset=utf-8' });
-      res.end(content);
-      return true;
+      return ok(res, content);
     }
   }
   else if (method === 'POST') {
     const secret = `/${WORKERFUL_SECRET}?`;
     if (url.startsWith(secret)) {
-      if (WORKERFUL_KIOSK) return;
+      if (WORKERFUL_KIOSK) return ok(res);
       const { promise, resolve } = Promise.withResolvers();
       summary = promise;
       try {
@@ -87,7 +91,7 @@ const server = await create(serializer[workerful_serializer], (req, res) => {
       finally {
         resolve();
       }
-      return true;
+      return ok(res);
     }
   }
   return false;
