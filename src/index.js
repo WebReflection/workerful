@@ -8,7 +8,7 @@ import { spawnSync } from 'node:child_process';
 import { openApp, apps } from 'open';
 
 import { parse, stringify, truthy } from './utils.js';
-import { pkg, json, create } from './server.js';
+import { pkg, indent, json, create } from './server.js';
 import bootstrap from './bootstrap.js';
 
 import serializer from './serializer.js';
@@ -86,7 +86,7 @@ const server = await create(serializer[workerful_serializer], (req, res) => {
           )
         );
         if (workerful.centered !== 'always') workerful.centered = false;
-        writeFileSync(pkg, `${stringify(json, null, '\t')}\n`);
+        writeFileSync(pkg, `${stringify(json, null, indent)}\n`);
       }
       finally {
         resolve();

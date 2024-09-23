@@ -25,7 +25,10 @@ package.json  # the package.json file at the root
   process.exit(code);
 }
 
-export const json = parse(readFileSync(pkg).toString('utf-8'));
+const pkgContent = readFileSync(pkg).toString('utf-8').trim();
+export const indent = /^([\t ]+)/m.test(pkgContent) ? RegExp.$1 : '\t';
+
+export const json = parse(pkgContent);
 
 export const create = async (serializer, workerful) => {
   const listener = json.workerful?.server;
