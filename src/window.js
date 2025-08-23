@@ -1,5 +1,4 @@
 import coincident from 'coincident/server/main';
-import serializer from './serializer.js';
 
 try {
   new SharedArrayBuffer(4);
@@ -34,6 +33,5 @@ if (workerful.centered) {
 
 const { Worker } = coincident({
   ws: workerful.ws,
-  ...serializer[workerful.serializer]
 });
 new Worker('/workerful.js');

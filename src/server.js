@@ -30,7 +30,7 @@ export const indent = /^([\t ]+)/m.test(pkgContent) ? RegExp.$1 : '\t';
 
 export const json = parse(pkgContent);
 
-export const create = async (serializer, workerful) => {
+export const create = async workerful => {
   const listener = json.workerful?.server;
   const handler = listener ?
     (await import(resolve(dirname(pkg), listener))).default :
@@ -51,6 +51,6 @@ export const create = async (serializer, workerful) => {
     res.end();
   });
   const wss = new WebSocketServer({ server });
-  coincident({ wss, ...serializer });
+  await coincident({ wss });
   return server;
 };

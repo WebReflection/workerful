@@ -28,17 +28,15 @@
   "license": "MIT",
   "description": "A lightweight, worker driven, Electron alternative",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^26.0.1",
-    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-terser": "^0.4.4",
-    "@ungap/structured-clone": "^1.2.0",
     "@ungap/with-resolvers": "^0.1.0",
-    "coincident": "^2.1.4",
-    "flatted": "^3.3.1",
-    "open": "^10.1.0",
-    "rollup": "^4.21.3",
+    "coincident": "^4.0.22",
+    "open": "^10.2.0",
+    "rollup": "^4.48.0",
     "static-handler": "^0.5.3",
-    "ws": "^8.18.0"
+    "ws": "^8.18.3"
   },
   "repository": {
     "type": "git",
